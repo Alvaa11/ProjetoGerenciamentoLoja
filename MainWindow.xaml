@@ -1,0 +1,275 @@
+﻿<Window x:Class="ProjetoLojaAutoPeça.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ProjetoLojaAutoPeça"
+        mc:Ignorable="d"
+        Title="NOME DA LOJA" Height="805" Width="761"
+        ScrollViewer.VerticalScrollBarVisibility="Auto">
+    <Canvas Background="#7FFFFFFF" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Hidden" Cursor="" Margin="0,0,0,1">
+        <Menu x:Name="Navigation" Height="104" Width="761" HorizontalAlignment="Right" VerticalAlignment="Top" Padding="10,20,10,0" Background="#C6034C3C">
+            <Button Content="Adicionar novo usuário" Height="45" Width="175" FontSize="15" Margin="0,10,0,0" Click="VerifyUser"/>
+            <Label Content="GERENCIAMENTO DE ESTOQUE" Height="78" Canvas.Left="208" Canvas.Top="12" Width="354" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="22" FontWeight="Bold" Foreground="White"/>
+        </Menu>
+        <Button x:Name="CaixaButton" Content="Caixa" Width="120" Height="50" Canvas.Left="50" Canvas.Top="108" Background="black" FontSize="20" Cursor="Hand" Click="HiddenEstoque" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+        <Button x:Name="EstoqueButton" Content="Estoque" Width="120" Height="50" Canvas.Left="180" Canvas.Top="108" Background="black" FontSize="20" Cursor="Hand" Click="HiddenCaixa" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+        <Rectangle x:Name="GridWrapper" Height="586" Canvas.Left="42" Stroke="#FF7FC29B" Canvas.Top="166" Width="684" RadiusX="1" RadiusY="1" HorizontalAlignment="Center" VerticalAlignment="Top" />
+        <Button x:Name="NewButton" Content="+ NOVO" Visibility="Hidden" Height="35" Canvas.Left="76" Click="Button_Click" Canvas.Top="180"  Width="75" FontSize="14" Foreground="White" BorderBrush="#FF7FC29B" Background="#FF64B787" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center" Cursor="Hand"/>
+        <TextBox x:Name="SearchProduct" Visibility="Hidden" Canvas.Left="176" Canvas.Top="186" Width="284" HorizontalAlignment="Left" Height="25" VerticalAlignment="Center" FontSize="14" Cursor="IBeam"/>
+        <Button x:Name="SearchButton" Height="35" Visibility="Hidden" Canvas.Left="482" Canvas.Top="180" Width="102" HorizontalAlignment="Left" VerticalAlignment="Top" Cursor="Hand" Content="PESQUISAR" Background="#FF64B787" BorderBrush="#FF7FC29B" Click="FilterBy" IsDefault="True"/>
+        <DataGrid x:Name="DataGridProdutos" Visibility="Hidden" Height="347" Width="665" Canvas.Left="53" Canvas.Top="226" HorizontalAlignment="Left" VerticalAlignment="Center" Background="White" IsSynchronizedWithCurrentItem="True" AutoGenerateColumns="False"
+                  Grid.Row="1" ColumnWidth="*" >
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Binding="{Binding ProdutoId}" Width="50"/>
+                <DataGridTextColumn Header="Nº Mercadoria" Binding="{Binding Mercadoria}" />
+                <DataGridTextColumn Header="Produto" Binding="{Binding Nome}" />
+                <DataGridTextColumn Header="Preço" Binding="{Binding Path=Preco,
+                                                                        ConverterCulture='pt-BR', StringFormat=C}" />
+                <DataGridTextColumn Header="Quantidade" Binding="{Binding Estoque}" />
+                <DataGridTemplateColumn Header="Editar">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Background="Gray" Foreground="Black" FontSize="15" Content="Editar" Click="SelectProdutoEditar"></Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Remover">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Background="Gray" Foreground="Black" FontSize="15" Content="Remover" Click="RemoveItem"></Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <Grid Grid.Row="2"  HorizontalAlignment="Center" VerticalAlignment="Top" Width="706" Height="172" Canvas.Left="26" Canvas.Top="570">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Border x:Name="CampNewProduct" Margin="30,5,350,6" BorderThickness="1" BorderBrush="Black" Visibility="Hidden">
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Width="311">
+                    <Label Content="Novo Produto" FontWeight="Bold" HorizontalAlignment="Center"
+                           VerticalAlignment="Center"/>
+                    <Grid x:Name="NovoProdutoGrid">
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Label  Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" Content="Mercadoria"/>
+                        <TextBox  Grid.Row="0" Grid.Column="1" Text="{Binding Mercadoria}"/>
+                        <Label  Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" Content="Nome"/>
+                        <TextBox  Grid.Row="1" Grid.Column="2" Text="{Binding Nome}"/>
+                        <Label  Grid.Row="2" Grid.Column="0" HorizontalAlignment="Left" Content="Preço"/>
+                        <TextBox Grid.Row="2" Grid.Column="3" Text="{Binding Preco}" />
+                        <Label Grid.Row="3" Grid.Column="0" HorizontalAlignment="Left" Content="Quantidade" />
+                        <TextBox Grid.Row="3" Grid.Column="4" Text="{Binding Estoque}"/>
+                        <Button Grid.Row="4" Grid.ColumnSpan="2" Height="35" Background="Black" Foreground="White" Width="150" Content="Adicionar"
+                                Margin="5" FontSize="15" Click="AddItem" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Grid>
+                </StackPanel>
+            </Border>
+            <Border x:Name="CampUpdateProduct" Margin="380,5,10,6" BorderThickness="1" BorderBrush="Black" Grid.Column="1" Visibility="Hidden">
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Width="305" Height="132">
+                    <Label Content="Editar Produto" FontWeight="Bold" HorizontalAlignment="Center"
+                           VerticalAlignment="Center"/>
+                    <Grid x:Name="EditarProdutoGrid" Width="224">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="38*"/>
+                            <RowDefinition Height="4*"/>
+                            <RowDefinition Height="27*"/>
+                            <RowDefinition Height="20*"/>
+                            <RowDefinition Height="0*"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="5*"/>
+                            <ColumnDefinition Width="11*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" Content="Nome"/>
+                        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Nome}"/>
+                        <Label Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" Content="Preço"/>
+                        <TextBox Grid.Row="1" Grid.Column="2" Text="{Binding Preco}"/>
+                        <Label Grid.Row="2" Grid.Column="0" HorizontalAlignment="Left" Content="Quantidade" Margin="-7,0,0,20" Grid.RowSpan="2" />
+                        <TextBox Grid.Row="2" Grid.Column="3" Text="{Binding Estoque}"/>
+                        <Button Grid.Row="3" Grid.ColumnSpan="2" Width="150" Height="35"
+                                Background="Black"
+                                Content="Salvar Alterações"
+                                Margin="25,5,0,0"
+                                FontSize="15"
+                                Click="UpdateItem"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"/>
+                    </Grid>
+                </StackPanel>
+            </Border>
+        </Grid>
+        <Border x:Name="CampRegister" Background="#faedcd" Width="680" Height="98" Canvas.Left="43" Canvas.Top="170"
+                Opacity="0.5" HorizontalAlignment="Center" VerticalAlignment="Top">
+            <Grid VerticalAlignment="Center" HorizontalAlignment="Left" Cursor="">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+
+                <Label Content="Nº da Mercadoria:" Grid.Column="0" Grid.Row="0" FontSize="26"/>
+                <TextBox x:Name="TextRegister" Width="340" Grid.Row="0" Grid.Column="1" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0"/>
+                <Label Grid.Row="1" Grid.Column="0" Content="Quantidade:" FontSize="26"/>
+                <TextBox x:Name="TextQuantity" Width="150" Grid.Row="1" Grid.Column="1" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0"/>
+                <Button Content="Register" Click="Register" Background="#bde0fe" Opacity="1.0" Width="100" Height="100" Grid.RowSpan="2" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="20" Foreground="Black" Cursor="Hand" IsDefault="True"/>
+            </Grid>
+        </Border>
+        <Border x:Name="ProductsList" Height="270" Width="370" Padding="5" Canvas.Left="45" Canvas.Top="272" Background="#ced4da" Opacity="0.6" HorizontalAlignment="Center" VerticalAlignment="Top">
+            <StackPanel>
+                <Grid x:Name="GridProdutos">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+
+
+                </Grid>
+            </StackPanel>
+        </Border>
+        <Border x:Name="PaymentsList" Height="270" Width="305" Canvas.Left="418" Canvas.Top="272" Background="#dee2e6" Opacity="0.7" HorizontalAlignment="Center" VerticalAlignment="Top">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="197*"/>
+                    <RowDefinition Height="73*"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Row="0" Width="305" Height="197">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0" Text="Formas de pagamento" 
+                                   HorizontalAlignment="Center" 
+                                   FontSize="25" 
+                                   FontWeight="Bold" 
+                                   FontFamily="Helvetica" 
+                                   FontStyle="Italic"/>
+
+                        <Button x:Name="PagamentoDinheiroButton" Grid.Row="1" Content="Dinheiro" FontSize="25" Background="Transparent" Foreground="Black" FontFamily="Helvetica" Margin="0,20,0,0" Click="PagamentoDinheiro"/>
+                        <Button x:Name="PagamentoPixButton" Grid.Row="2" Content="Pix" FontSize="25" Background="Transparent" Foreground="Black" FontFamily="Helvetica" Margin="0,5,0,0" Click="PagamentoPix"/>
+                        <Button x:Name="PagamentoCartaoDebitoButton" Grid.Row="3" Content="Cartão de débito" Background="Transparent" Foreground="Black" FontSize="25" FontFamily="Helvetica" Margin="0,5,0,0" Click="PagamentoDebito"/>
+                        <Button x:Name="PagamentoCartaoCreditoButton" Grid.Row="4" Content="Cartão de crédito"  Background="Transparent" Foreground="Black" FontSize="25" FontFamily="Helvetica" Margin="0,5,0,0" Click="PagamentoCredito"/>
+                    </Grid>
+                </StackPanel>
+                <StackPanel Grid.Row="1" Width="305" Height="73">
+                    <TextBlock x:Name="TotalInput"
+                               Text="Total: R$00,00" 
+                               FontSize="33" 
+                               FontFamily="Helvetica"
+                               FontWeight="Bold"
+                               Foreground="Red"
+                               HorizontalAlignment="Left"
+                               Margin="0,15,0,0"
+                               />
+                </StackPanel>
+
+
+            </Grid>
+        </Border>
+        <Border x:Name="Utilities"  Height="196" Width="678" Canvas.Left="44" Canvas.Top="546" Background="#dee2e6" Opacity="0.8" HorizontalAlignment="Center" VerticalAlignment="Top">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="271*" />
+                    <ColumnDefinition Width="407*" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0">
+                    <Border Height="197" BorderThickness="2" BorderBrush="Black">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Grid.Row="0" Text="Utilitários" 
+                                       HorizontalAlignment="Center" 
+                                       FontSize="25" 
+                                       FontWeight="Bold" 
+                                       FontFamily="Helvetica" 
+                                       FontStyle="Italic"/>
+                            <Button Grid.Row="1" Content="Relatório de vendas" FontSize="25" FontFamily="Helvetica" FontStyle="Italic" Foreground="Blue" Margin="0,10,0,0" Cursor="Hand"/>
+                            <Button Grid.Row="2" Content="Relatório de estoque" FontSize="25" FontFamily="Helvetica" FontStyle="Italic" Foreground="Blue" Margin="0,5,0,0" Cursor="Hand"/>
+                            <Button Grid.Row="3" Content="Relatório de compras" FontSize="25" FontFamily="Helvetica" FontStyle="Italic" Foreground="Blue" Margin="0,5,0,0" Cursor="Hand" />
+
+                        </Grid>
+                    </Border>
+                </StackPanel>
+
+                <StackPanel Grid.Column="1">
+                    <Border>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="68*"/>
+                                <RowDefinition Height="125*"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Text="Concluir venda" 
+                                       HorizontalAlignment="Center" 
+                                       VerticalAlignment="Center"
+                                       FontSize="38" 
+                                       FontWeight="Bold" 
+                                       FontFamily="Helvetica" 
+                                       FontStyle="Italic" 
+                                       Height="44" 
+                                       Width="300"
+                                       Margin="0,0,0,50"/>
+
+                            <Button Grid.Row="1" 
+                                    Content="Finalizar venda"
+                                    FontSize="45"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Height="68"
+                                    Width="375"
+                                    Foreground="Black"
+                                    Background="Gray"
+                                    Click="FinalizarVenda"
+                                    Cursor="Hand"/>
+
+                        </Grid>
+                    </Border>
+                </StackPanel>
+
+            </Grid>
+        </Border>
+
+    </Canvas>
+</Window>

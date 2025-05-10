@@ -1,0 +1,163 @@
+﻿<Window x:Class="ProjetoLojaAutoPeça.AddUser"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ProjetoLojaAutoPeça"
+        mc:Ignorable="d"
+        Title="AddUser" Height="550" Width="680"
+        WindowStyle="None" ResizeMode="NoResize" MouseDown="Window_MouseDown"
+        AllowsTransparency="True" Background="Transparent">
+    <Grid>
+        <Grid x:Name="NovoUserGrid">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            
+            <Border  Grid.RowSpan="2" Grid.ColumnSpan="2"
+                    CornerRadius="20" Padding="20">
+                <Border.Background>
+                    <LinearGradientBrush>
+                        <GradientStop Color="#606c38" Offset="0.1"/>
+                        <GradientStop Color="#fefae0" Offset="1"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+            </Border>
+            <StackPanel Grid.Row="0" VerticalAlignment="Center">
+                <TextBlock Text="Adicionar Usuário" 
+                           FontSize="35"
+                           FontFamily="Helvetica"
+                           FontWeight="Light" 
+                           Foreground="#dad7cd"
+                           Opacity="0.8"
+                           HorizontalAlignment="Center"
+                           Margin="0,0,0,20"/>
+            </StackPanel>
+            <StackPanel Grid.Row="1">
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+                    <Label Content="Username"
+                           FontFamily="Helvetica"
+                           FontSize="20"
+                           Foreground="White"
+                           Opacity="0.8" 
+                           Margin="10,0,0,0"/>
+                    
+                    <TextBox x:Name="UserTxt" 
+                             HorizontalAlignment="Left" 
+                             Width="189" 
+                             Height="28"
+                             Background="Transparent"    
+                             BorderThickness="0" 
+                             Margin="5,0,0,0"
+                             FontFamily="Helvetica"
+                             FontSize="20"
+                             Foreground="White"
+                             Opacity="0.5" />
+                </StackPanel>
+                <Border BorderBrush="White" 
+                        BorderThickness="2" 
+                        Width="200" 
+                        Opacity="0.6"
+                        HorizontalAlignment="Center"
+                        Margin="35,0,0,0"/>  
+                <StackPanel Orientation="Horizontal" Margin="0,35,0,0">
+                    <Label Content="Password"
+                           FontFamily="Helvetica"
+                           FontSize="20"
+                           Foreground="White"
+                           Opacity="0.8" 
+                           Margin="10,0,0,0"/>
+                    
+                    <PasswordBox x:Name="PassTxt" 
+                             HorizontalAlignment="Left" 
+                             Width="189" 
+                             Height="25"
+                             Background="Transparent"    
+                             BorderThickness="0" 
+                             Margin="5,0,0,0"
+                             FontFamily="Helvetica"
+                             FontSize="20"
+                             Foreground="White"
+                             Opacity="0.5" 
+                             MaxLength="16"
+                             />
+                </StackPanel>
+                <Border BorderBrush="White" 
+                        BorderThickness="2" 
+                        Width="200" 
+                        Opacity="0.6"
+                        HorizontalAlignment="Center"
+                        Margin="35,0,0,10"/>
+
+                <StackPanel Orientation="Horizontal" Width="365" Margin="0,0,0,0" HorizontalAlignment="Center">
+                <Label Content="Tipo de Usuário"
+                        FontFamily="Helvetica"
+                        FontSize="20"                       
+                        Foreground="White"
+                        Opacity="0.8"
+                        Margin="0,0,5,0"/>
+                    
+                <CheckBox x:Name="AdminCheckBox" 
+                          Content="Administrador"
+                          FontFamily="Helvetica"
+                          FontSize="20"
+                          Foreground="White"
+                          Background="Transparent"
+                          BorderBrush="White"
+                          BorderThickness="2"
+                          Opacity="0.8"
+                          HorizontalAlignment="Center" 
+                          VerticalAlignment="Center"
+                          Cursor="Hand"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" 
+                            HorizontalAlignment="Center">
+                    <Button Height="78"
+                            Width="120"
+                            Content="Adicionar"
+                            FontSize="25"
+                            Margin="0,20,0,0"
+                            HorizontalAlignment="Left"
+                            Click="Register"
+                            Cursor="Hand"
+                            IsDefault="True"/>
+
+                    <Button Height="78"
+                            Width="120"
+                            Content="Voltar"
+                            FontSize="25"
+                            Margin="20,20,0,0"
+                            HorizontalAlignment="Right" 
+                            Click="Voltar_Click"
+                            Cursor="Hand"/>
+                </StackPanel>
+            </StackPanel>
+            <StackPanel Grid.Row="0"
+                        Grid.Column="1">
+                <StackPanel>
+                    <DataGrid x:Name="DataGridUsers" Height="247" Width="328" HorizontalAlignment="Left" VerticalAlignment="Center" Background="Transparent" IsSynchronizedWithCurrentItem="True" AutoGenerateColumns="False"
+          Grid.Row="1" ColumnWidth="*" Margin="0,10,0,0" >
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="ID" Binding="{Binding UsuarioId}" Width="50"/>
+                            <DataGridTextColumn Header="User" Binding="{Binding Usuario}" />
+                            <DataGridTextColumn Header="Adm" Binding="{Binding Administrador}" />
+                            <DataGridTemplateColumn Header="Remover">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Background="Gray" Foreground="Black" FontSize="15" Content="Remover" Click="RemoveUser"></Button>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>
