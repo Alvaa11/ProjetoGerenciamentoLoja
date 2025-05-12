@@ -17,6 +17,7 @@ namespace ProjetoLojaAutoPeça
             NovoUserGrid.DataContext = NewUser;
         }
 
+        // Método para carregar os usuários do banco de dados no grid
         private void LoadUsers()
         {
             using (GerenciamentoContext context = new GerenciamentoContext())
@@ -25,6 +26,8 @@ namespace ProjetoLojaAutoPeça
                 DataGridUsers.ItemsSource = users;
             }
         }
+
+        // Método para adicionar um novo usuário
         private void Register(object s, RoutedEventArgs e)
         {
             using (GerenciamentoContext context = new GerenciamentoContext())
@@ -45,7 +48,8 @@ namespace ProjetoLojaAutoPeça
                 }
             }
         }
-       
+
+        // Método para remover um usuário
         private void RemoveUser(object s, RoutedEventArgs e)
         {
             using (GerenciamentoContext context = new GerenciamentoContext())
@@ -56,12 +60,14 @@ namespace ProjetoLojaAutoPeça
                 LoadUsers();
             }
         }
-      
+
+        // Método para cancelar a operação
         private void Voltar_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
         }
 
+        // Método para verificar se o usuário já existe
         private bool VerificarUsuario(UsuariosModel user)
         {
             using (GerenciamentoContext context = new GerenciamentoContext())

@@ -9,6 +9,7 @@ using System.Windows;
 
 namespace ProjetoLojaAutoPeça.Model
 {
+    // Classe que representa o modelo de vendas
     public class VendasModel
     {
 

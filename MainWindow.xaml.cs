@@ -27,6 +27,8 @@ namespace ProjetoLojaAutoPeça
             loginAdmin login = new loginAdmin();
             login.Show();
         }
+
+        // Carrega os produtos do banco de dados
         private void LoadProducts()
         {
             using (GerenciamentoContext context = new GerenciamentoContext())
@@ -35,7 +37,8 @@ namespace ProjetoLojaAutoPeça
                 DataGridProdutos.ItemsSource = products;
             }
         }
-        
+
+        // Filtra os produtos pelo nome
         private void FilterBy(object s, RoutedEventArgs e)
         {
             string filter = SearchProduct.Text.ToLower();
@@ -45,6 +48,8 @@ namespace ProjetoLojaAutoPeça
                 DataGridProdutos.ItemsSource = products;
             }
         }
+
+        // Abre a tela de cadastro de produtos
         public void Button_Click(object s, RoutedEventArgs e)
         {
             CampNewProduct.Visibility = Visibility.Visible;
@@ -54,6 +59,8 @@ namespace ProjetoLojaAutoPeça
             AddUser addUser = new AddUser();
             addUser.Show();
         }
+
+        // Adiciona o produto no banco de dados
         public void AddItem(object s, RoutedEventArgs e)
         {
             if (ValidaDados(NewProduct))
@@ -76,6 +83,7 @@ namespace ProjetoLojaAutoPeça
             }
         }
 
+        // Remove o produto selecionado
         public void RemoveItem(object s, RoutedEventArgs e)
         {
             using (GerenciamentoContext context = new GerenciamentoContext())
@@ -98,12 +106,15 @@ namespace ProjetoLojaAutoPeça
             }
             
         }
+
+        // Abre a tela de edição do produto
         private void SelectProdutoEditar(object s, RoutedEventArgs e)
         {
             selectProduct = (s as FrameworkElement).DataContext as ProdutosModel;
             EditarProdutoGrid.DataContext = selectProduct;
             CampUpdateProduct.Visibility = Visibility.Visible;
-        }   
+        }
+        // Atualiza o produto selecionado
         public void UpdateItem(object s, RoutedEventArgs e)
         {
             if (ValidaDados(selectProduct))
@@ -136,6 +147,7 @@ namespace ProjetoLojaAutoPeça
             }
         }
 
+        // Fecha a tela de cadastro de produtos
         private void HiddenEstoque(object s, RoutedEventArgs e)
         {
             NewButton.Visibility = Visibility.Hidden;
@@ -158,6 +170,7 @@ namespace ProjetoLojaAutoPeça
             }
         }
 
+        // Fecha a tela de caixa
         private void HiddenCaixa(object s, RoutedEventArgs e)
         {
             NewButton.Visibility = Visibility.Visible;
@@ -178,6 +191,7 @@ namespace ProjetoLojaAutoPeça
         private double total = 0;
         private string pagamento;
 
+        // Registra a mercadoria e quantidade no grid
         private void Register(object s, RoutedEventArgs e)
         {
             if (TextRegister.Text == "")
@@ -242,6 +256,7 @@ namespace ProjetoLojaAutoPeça
             }
         }
 
+        // Define a forma de pagamento
         private void PagamentoDinheiro(object s, RoutedEventArgs e)
         {
             pagamento = "Dinheiro";
@@ -250,7 +265,7 @@ namespace ProjetoLojaAutoPeça
             PagamentoCartaoCreditoButton.Background = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Transparent);
             PagamentoPixButton.Background = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Transparent);
         }
-         private void PagamentoDebito(object s, RoutedEventArgs e)
+        private void PagamentoDebito(object s, RoutedEventArgs e)
         {
             pagamento = "Debito";
             PagamentoDinheiroButton.Background = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Transparent);
@@ -258,7 +273,7 @@ namespace ProjetoLojaAutoPeça
             PagamentoCartaoCreditoButton.Background = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Transparent);
             PagamentoPixButton.Background = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Transparent);
         }
-         private void PagamentoCredito(object s, RoutedEventArgs e)
+        private void PagamentoCredito(object s, RoutedEventArgs e)
         {
             pagamento = "Credito";
             PagamentoDinheiroButton.Background = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Transparent);
@@ -266,7 +281,7 @@ namespace ProjetoLojaAutoPeça
             PagamentoCartaoCreditoButton.Background = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Blue);
             PagamentoPixButton.Background = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Transparent);
         }
-         private void PagamentoPix(object s, RoutedEventArgs e)
+        private void PagamentoPix(object s, RoutedEventArgs e)
         {
             pagamento = "Pix";
             PagamentoDinheiroButton.Background = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Transparent);
@@ -275,6 +290,7 @@ namespace ProjetoLojaAutoPeça
             PagamentoPixButton.Background = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Blue);
         }
 
+        // Finaliza a venda e atualiza o estoque
         private void FinalizarVenda(object s, RoutedEventArgs e)
         {
             using (GerenciamentoContext context = new GerenciamentoContext())

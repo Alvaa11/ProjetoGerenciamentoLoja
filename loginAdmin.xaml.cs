@@ -13,6 +13,8 @@ namespace ProjetoLojaAutoPeça
         {
             InitializeComponent();
         }
+
+        // Verifica se o usuário é um administrador e abre a tela de adicionar usuário
         private void Open(object s, RoutedEventArgs e)
         {
             using (GerenciamentoContext context = new GerenciamentoContext())
@@ -34,11 +36,13 @@ namespace ProjetoLojaAutoPeça
             }
         }
 
+        // Fecha a tela de login
         private void Voltar_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
         }
 
+        // Verifica se o usuário existe no banco de dados
         private bool VerificarUsuario(UsuariosModel user)
         {
             using (GerenciamentoContext context = new GerenciamentoContext())

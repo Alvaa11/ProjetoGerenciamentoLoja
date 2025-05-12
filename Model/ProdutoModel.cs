@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace ProjetoLojaAutoPeça.Model
 {
+    // Classe que representa o modelo de produtos
     public class ProdutosModel
     {
         [Key]

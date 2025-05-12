@@ -27,6 +27,8 @@ namespace ProjetoLojaAutoPeça
             InitializeComponent();
         }
 
+        /// Método chamado quando o botão de login é clicado
+        /// Verifica se o usuario e senha estão corretos, caso sim, abre a tela principal
         public void OnSubmit(object s, RoutedEventArgs e)
         {
             using (GerenciamentoContext context = new GerenciamentoContext())
@@ -46,11 +48,13 @@ namespace ProjetoLojaAutoPeça
             }
         }
 
+        /// Método chamado quando o botão de fechar é clicado
         public void OnClose(object s, RoutedEventArgs e)
         {
             this.Close();
         }
 
+        /// Método chamado quando o botão esquerdo do mouse é segurado e arrastado
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.LeftButton == System.Windows.Input.MouseButtonState.Pressed)

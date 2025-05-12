@@ -8,12 +8,14 @@ using ProjetoLojaAutoPeça.Model;
 
 namespace ProjetoLojaAutoPeça.Context
 {
+    // Classe que representa o contexto do banco de dados
     public class GerenciamentoContext : DbContext
     {
         public DbSet<ProdutosModel> Produtos { get; set; }
         public DbSet<UsuariosModel> Usuarios { get; set; }
         public DbSet<VendasModel> Vendas { get; set; }
 
+        // Construtor que recebe as opções do contexto
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
