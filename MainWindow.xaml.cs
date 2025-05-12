@@ -197,9 +197,9 @@ namespace ProjetoLojaAutoPeça
                 int mercadoria = int.Parse(TextRegister.Text);
                 int quantidade = int.Parse(TextQuantity.Text);
                 var produto = context.Produtos.FirstOrDefault(p => p.Mercadoria == mercadoria);
-                if (produto == null)
+                if (produto == null | produto.Estoque < 1 | produto.Estoque < quantidade)
                 {
-                    MessageBox.Show("Produto não encontrado!");
+                    MessageBox.Show("Produto não encontrado ou sem estoque!");
                     return;
                 }
                 else
@@ -277,24 +277,54 @@ namespace ProjetoLojaAutoPeça
 
         private void FinalizarVenda(object s, RoutedEventArgs e)
         {
-            if (total == 0)
+            using (GerenciamentoContext context = new GerenciamentoContext())
             {
-                MessageBox.Show("Por favor, insira uma mercadoria antes de finalizar a venda!");
-                return;
-            }
-            else
-            {
-                MessageBox.Show($"Venda finalizada com sucesso! Total: R$ {total:F2}");
-                total = 0;
-                linhaAtualMercadoria = 0;
-                linhaAtualProdutos = 0;
-                TextRegister.Text = "";
-                TextQuantity.Text = "";
-                TotalInput.Text = $"Total: R$00,00";
-                GridProdutos.Children.Clear();
-                GridProdutos.RowDefinitions.Clear();
+                DateTime data = DateTime.Now;
+                string dataHoje = $"{data.Day}/{data.Month}/{data.Year} - {data.Hour}:{data.Minute}";
+
+                var produto = context.Produtos.FirstOrDefault(p => p.Mercadoria == int.Parse(TextRegister.Text));
+
+                if (total == 0 | pagamento == null)
+                {
+                    MessageBox.Show("Por favor, insira uma mercadoria ou forma de pagamento antes de finalizar a venda!");
+                    return;
+                }
+                else
+                {
+                    produto.Estoque = produto.Estoque - int.Parse(TextQuantity.Text);
+                    context.Produtos.Update(produto);
+
+                    VendasModel newVenda = new VendasModel(dataHoje, produto.Mercadoria, produto.Nome, pagamento, int.Parse(TextQuantity.Text), total);
+                    context.Vendas.Add(newVenda);
+                    context.SaveChanges();
+                    LoadProducts();
+                    MessageBox.Show($"Venda finalizada com sucesso! Total: R$ {total:F2}; Pagamento em: {pagamento}; Data: {data.Day}/{data.Month}/{data.Year} - {data.Hour}:{data.Minute}");
+
+                    total = 0;
+                    linhaAtualMercadoria = 0;
+                    linhaAtualProdutos = 0;
+                    pagamento = "";
+                    TextRegister.Text = "";
+                    TextQuantity.Text = "";
+
+                    PagamentoDinheiroButton.Background = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Transparent);
+                    PagamentoCartaoDebitoButton.Background = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Transparent);
+                    PagamentoCartaoCreditoButton.Background = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Transparent);
+                    PagamentoPixButton.Background = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Transparent);
+
+                    TotalInput.Text = $"Total: R$00,00";
+                    GridProdutos.Children.Clear();
+                    GridProdutos.RowDefinitions.Clear();
+
+                }
             }
         }
+
+        private void GerarRelatorioVendas(object s, RoutedEventArgs e)
+        {
+
+        }
+
         private bool ValidaDados(ProdutosModel product)
         {
             if (product.Nome == null | product.Preco == 0 | product.Estoque == 0) return false;

@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:ProjetoLojaAutoPeça"
         mc:Ignorable="d"
         Title="NOME DA LOJA" Height="805" Width="761"
-        ScrollViewer.VerticalScrollBarVisibility="Auto">
+        ScrollViewer.VerticalScrollBarVisibility="Visible">
     <Canvas Background="#7FFFFFFF" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Hidden" Cursor="" Margin="0,0,0,1">
         <Menu x:Name="Navigation" Height="104" Width="761" HorizontalAlignment="Right" VerticalAlignment="Top" Padding="10,20,10,0" Background="#C6034C3C">
             <Button Content="Adicionar novo usuário" Height="45" Width="175" FontSize="15" Margin="0,10,0,0" Click="VerifyUser"/>
@@ -181,10 +181,10 @@
                                    FontFamily="Helvetica" 
                                    FontStyle="Italic"/>
 
-                        <Button x:Name="PagamentoDinheiroButton" Grid.Row="1" Content="Dinheiro" FontSize="25" Background="Transparent" Foreground="Black" FontFamily="Helvetica" Margin="0,20,0,0" Click="PagamentoDinheiro"/>
-                        <Button x:Name="PagamentoPixButton" Grid.Row="2" Content="Pix" FontSize="25" Background="Transparent" Foreground="Black" FontFamily="Helvetica" Margin="0,5,0,0" Click="PagamentoPix"/>
-                        <Button x:Name="PagamentoCartaoDebitoButton" Grid.Row="3" Content="Cartão de débito" Background="Transparent" Foreground="Black" FontSize="25" FontFamily="Helvetica" Margin="0,5,0,0" Click="PagamentoDebito"/>
-                        <Button x:Name="PagamentoCartaoCreditoButton" Grid.Row="4" Content="Cartão de crédito"  Background="Transparent" Foreground="Black" FontSize="25" FontFamily="Helvetica" Margin="0,5,0,0" Click="PagamentoCredito"/>
+                        <Button x:Name="PagamentoDinheiroButton" Grid.Row="1" Content="Dinheiro" FontSize="25" Background="Transparent" Foreground="Black" FontFamily="Helvetica" Margin="0,20,0,0" Click="PagamentoDinheiro" Cursor="Hand"/>
+                        <Button x:Name="PagamentoPixButton" Grid.Row="2" Content="Pix" FontSize="25" Background="Transparent" Foreground="Black" FontFamily="Helvetica" Margin="0,5,0,0" Click="PagamentoPix" Cursor="Hand"/>
+                        <Button x:Name="PagamentoCartaoDebitoButton" Grid.Row="3" Content="Cartão de débito" Background="Transparent" Foreground="Black" FontSize="25" FontFamily="Helvetica" Margin="0,5,0,0" Click="PagamentoDebito" Cursor="Hand"/>
+                        <Button x:Name="PagamentoCartaoCreditoButton" Grid.Row="4" Content="Cartão de crédito"  Background="Transparent" Foreground="Black" FontSize="25" FontFamily="Helvetica" Margin="0,5,0,0" Click="PagamentoCredito" Cursor="Hand"/>
                     </Grid>
                 </StackPanel>
                 <StackPanel Grid.Row="1" Width="305" Height="73">

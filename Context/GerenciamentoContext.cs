@@ -39,12 +39,9 @@ namespace ProjetoLojaAutoPeça.Context
                 v.HasKey(v => v.VendaId);
                 v.Property(v => v.Data).IsRequired();
                 v.Property(v => v.Quantidade).IsRequired();
-                v.HasOne(v => v.Produto)
-                    .WithMany(p => p.Vendas)
-                    .HasForeignKey(v => v.ProdutoId);
-                v.HasOne(v => v.Usuario)
-                    .WithMany(u => u.Vendas)
-                    .HasForeignKey(v => v.UsuarioId);
+                v.Property(v => v.Produto).IsRequired();
+                v.Property(v => v.FormaDePagamento).IsRequired();
+                v.Property(v => v.Total).IsRequired();
             });
         }
 

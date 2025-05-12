@@ -11,8 +11,8 @@ using ProjetoLojaAutoPeça.Context;
 namespace ProjetoLojaAutoPeça.Migrations
 {
     [DbContext(typeof(GerenciamentoContext))]
-    [Migration("20250508232941_Initial")]
-    partial class Initial
+    [Migration("20250512055843_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -80,41 +80,43 @@ namespace ProjetoLojaAutoPeça.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Produto")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("ProdutoId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("ProdutosModelProdutoId")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("Quantidade")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("UsuarioId")
+                    b.Property<double>("Total")
+                        .HasColumnType("REAL");
+
+                    b.Property<int?>("UsuariosModelUsuarioId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("VendaId");
 
-                    b.HasIndex("ProdutoId");
+                    b.HasIndex("ProdutosModelProdutoId");
 
-                    b.HasIndex("UsuarioId");
+                    b.HasIndex("UsuariosModelUsuarioId");
 
                     b.ToTable("Vendas");
                 });
 
             modelBuilder.Entity("ProjetoLojaAutoPeça.Model.VendasModel", b =>
                 {
-                    b.HasOne("ProjetoLojaAutoPeça.Model.ProdutosModel", "Produto")
+                    b.HasOne("ProjetoLojaAutoPeça.Model.ProdutosModel", null)
                         .WithMany("Vendas")
-                        .HasForeignKey("ProdutoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ProdutosModelProdutoId");
 
-                    b.HasOne("ProjetoLojaAutoPeça.Model.UsuariosModel", "Usuario")
+                    b.HasOne("ProjetoLojaAutoPeça.Model.UsuariosModel", null)
                         .WithMany("Vendas")
-                        .HasForeignKey("UsuarioId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Produto");
-
-                    b.Navigation("Usuario");
+                        .HasForeignKey("UsuariosModelUsuarioId");
                 });
 
             modelBuilder.Entity("ProjetoLojaAutoPeça.Model.ProdutosModel", b =>
