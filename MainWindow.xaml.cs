@@ -80,10 +80,21 @@ namespace ProjetoLojaAutoPeça
                 }
                 else
                 {
-                    int mercadoria = int.Parse(mercadoriatxt.Text);
+                    int mercadoria;
                     string nome = nometxt.Text;
-                    double preco = double.Parse(precotxt.Text);
-                    int estoque = int.Parse(estoquetxt.Text);
+                    double preco;
+                    int estoque;
+
+                    bool converterMercadoria = int.TryParse(mercadoriatxt.Text, out mercadoria);
+                    bool converterPreco = double.TryParse(precotxt.Text, out preco);
+                    bool converterEstoque = int.TryParse(estoquetxt.Text, out estoque);
+
+                    if (!converterEstoque || !converterMercadoria || !converterPreco)
+                    {
+                        MessageBox.Show("Por favor, insira uma mercadoria válida!");
+                        return;
+                    };
+                    
 
                     using (GerenciamentoContext context = new GerenciamentoContext())
                     {
@@ -159,8 +170,16 @@ namespace ProjetoLojaAutoPeça
                         {
 
                             string nome = nomeupdatetxt.Text;
-                            double preco = double.Parse(precoupdatetxt.Text);
-                            int quantidade = int.Parse(quantidadeupdatetxt.Text);
+                            double preco;
+                            int quantidade;
+
+                            bool convertPreco = double.TryParse(precoupdatetxt.Text, out preco);
+                            bool convertQuantidade = int.TryParse(quantidadeupdatetxt.Text, out quantidade);
+                            if (!convertPreco || !convertQuantidade)
+                            {
+                                MessageBox.Show("Por favor, insira uma mercadoria válida!");
+                                return;
+                            };   
 
                             produto.Nome = nome;
                             produto.Preco = preco;
@@ -231,25 +250,26 @@ namespace ProjetoLojaAutoPeça
         // Registra a mercadoria e quantidade no grid
         private void Register(object s, RoutedEventArgs e)
         {
-            if (TextRegister.Text == "")
+            if (TextRegister.Text == "" || TextQuantity.Text == "")
             {
                 MessageBox.Show("Por favor, insira uma mercadoria válida!");
-                return;
-            }
-
-            if (TextQuantity.Text == "")
-            {
-                MessageBox.Show("Por favor, insira uma quantidade válida!");
                 return;
             }
             
             using (GerenciamentoContext context = new GerenciamentoContext())
             {
-                int mercadoria = int.Parse(TextRegister.Text);
-                int quantidade = int.Parse(TextQuantity.Text);
-                var produto = context.Produtos.FirstOrDefault(p => p.Mercadoria == mercadoria);
+                int mercadoria;
+                int quantidade;              
 
-                if (produto == null || produto.Mercadoria != mercadoria || produto.Estoque < 1 || produto.Estoque < quantidade)
+                bool converterMercadoria = int.TryParse(TextRegister.Text, out mercadoria);
+                bool converterQuantidade = int.TryParse(TextQuantity.Text, out quantidade);
+                var produto = context.Produtos.FirstOrDefault(p => p.Mercadoria == mercadoria);
+                if (!converterMercadoria || !converterQuantidade)
+                {
+                    MessageBox.Show("Por favor, insira uma mercadoria válida!");
+                    return;
+                }
+                else if (produto == null || produto.Mercadoria != mercadoria || produto.Estoque < 1 || produto.Estoque < quantidade)
                 {
                     MessageBox.Show("Produto não encontrado ou estoque insuficiente!");
                     return;
