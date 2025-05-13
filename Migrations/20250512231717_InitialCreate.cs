@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -48,8 +47,8 @@ namespace ProjetoLojaAutoPeça.Migrations
                 {
                     VendaId = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Data = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    ProdutoId = table.Column<int>(type: "INTEGER", nullable: false),
+                    Data = table.Column<string>(type: "TEXT", nullable: false),
+                    Mercadoria = table.Column<int>(type: "INTEGER", nullable: false),
                     Produto = table.Column<string>(type: "TEXT", nullable: false),
                     FormaDePagamento = table.Column<string>(type: "TEXT", nullable: false),
                     Quantidade = table.Column<int>(type: "INTEGER", nullable: false),

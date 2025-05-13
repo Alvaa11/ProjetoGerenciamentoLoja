@@ -1,6 +1,7 @@
 ﻿using System;
 using System.CodeDom;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
@@ -18,10 +19,10 @@ namespace ProjetoLojaAutoPeça.Model
             
         }
 
-        public VendasModel(string data, int produtoID, string produto, string pagamento, int quantidade, double total)
+        public VendasModel(string data, int mercadoria, string produto, string pagamento, int quantidade, double total)
         {
             Data = data;
-            ProdutoId = produtoID;
+            Mercadoria = mercadoria;
             Produto = produto;
             FormaDePagamento = pagamento;
             Quantidade = quantidade;
@@ -32,7 +33,7 @@ namespace ProjetoLojaAutoPeça.Model
         public int VendaId { get; set; }
         public string Data { get; set; }
 
-        public int ProdutoId { get; set; }
+        public int Mercadoria { get; set; }
         public string Produto { get; set; }
 
         public string? FormaDePagamento { get; set; }

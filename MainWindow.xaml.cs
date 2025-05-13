@@ -1,16 +1,21 @@
-﻿using System.Windows;
+﻿using System.Collections.ObjectModel;
+using System.IO.Packaging;
+using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
+using IronXL;
+using Microsoft.Win32;
 using ProjetoLojaAutoPeça.Context;
 using ProjetoLojaAutoPeça.Model;
 
 namespace ProjetoLojaAutoPeça
 {
+
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
+        public ObservableCollection<VendasModel> Selecionados { get; set; } = new ObservableCollection<VendasModel>();
         ProdutosModel NewProduct = new ProdutosModel();
         ProdutosModel selectProduct = new ProdutosModel();
         ProdutosModel ProductToDelete = new ProdutosModel();
@@ -19,6 +24,7 @@ namespace ProjetoLojaAutoPeça
         {
             InitializeComponent();
             LoadProducts();
+            DataContext = this;
             NovoProdutoGrid.DataContext = NewProduct;
         }
 
@@ -190,6 +196,7 @@ namespace ProjetoLojaAutoPeça
         private int linhaAtualProdutos = 0;
         private double total = 0;
         private string pagamento;
+        DateTime data = DateTime.Now;
 
         // Registra a mercadoria e quantidade no grid
         private void Register(object s, RoutedEventArgs e)
@@ -211,19 +218,19 @@ namespace ProjetoLojaAutoPeça
                 int mercadoria = int.Parse(TextRegister.Text);
                 int quantidade = int.Parse(TextQuantity.Text);
                 var produto = context.Produtos.FirstOrDefault(p => p.Mercadoria == mercadoria);
-                if (produto == null | produto.Estoque < 1 | produto.Estoque < quantidade)
+
+                if (produto == null || produto.Mercadoria != mercadoria || produto.Estoque < 1 || produto.Estoque < quantidade)
                 {
-                    MessageBox.Show("Produto não encontrado ou sem estoque!");
+                    MessageBox.Show("Produto não encontrado ou estoque insuficiente!");
                     return;
                 }
                 else
                 {
-                    
                     GridProdutos.RowDefinitions.Add(new RowDefinition());
                     var mercadoriaTextBlock = new TextBlock
                     {
                         Text = $"{mercadoria} -------- ",
-                        FontSize = 15,
+                        FontSize = 18,
                         FontWeight = FontWeights.Bold,
                         FontFamily = new System.Windows.Media.FontFamily("Helvetica"),
                         FontStyle = FontStyles.Italic
@@ -235,7 +242,7 @@ namespace ProjetoLojaAutoPeça
                     var infoTextBLock = new TextBlock
                     {
                         Text = $"{produto.Nome} X {quantidade}",
-                        FontSize = 15,
+                        FontSize = 18,
                         FontWeight = FontWeights.Bold,
                         FontFamily = new System.Windows.Media.FontFamily("Helvetica"),
                         FontStyle = FontStyles.Italic
@@ -250,6 +257,18 @@ namespace ProjetoLojaAutoPeça
                     linhaAtualProdutos++;
                     total = total + (produto.Preco * quantidade);
                     TotalInput.Text = $"Total: R${total:F2}";
+                    
+                    var venda = new VendasModel
+                    {
+                        Mercadoria = produto.Mercadoria,
+                        Produto = produto.Nome,
+                        Quantidade = quantidade,
+                        Total = quantidade * produto.Preco
+                    };
+
+                    Selecionados.Add(venda);
+                    TextRegister.Text = "";
+                    TextQuantity.Text = "";
 
                     return;
                 }
@@ -261,57 +280,90 @@ namespace ProjetoLojaAutoPeça
         {
             pagamento = "Dinheiro";
             PagamentoDinheiroButton.Background = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Blue);
+            PagamentoDinheiroButton.Foreground = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.White);
+
             PagamentoCartaoDebitoButton.Background = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Transparent);
+            PagamentoCartaoDebitoButton.Foreground = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Black);
+
             PagamentoCartaoCreditoButton.Background = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Transparent);
+            PagamentoCartaoCreditoButton.Foreground = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Black);
+
             PagamentoPixButton.Background = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Transparent);
+            PagamentoPixButton.Foreground = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Black);
         }
         private void PagamentoDebito(object s, RoutedEventArgs e)
         {
             pagamento = "Debito";
             PagamentoDinheiroButton.Background = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Transparent);
+            PagamentoDinheiroButton.Foreground = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Black);
+
             PagamentoCartaoDebitoButton.Background = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Blue);
+            PagamentoCartaoDebitoButton.Foreground = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.White);
+
             PagamentoCartaoCreditoButton.Background = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Transparent);
+            PagamentoCartaoCreditoButton.Foreground = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Black);
+
             PagamentoPixButton.Background = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Transparent);
+            PagamentoPixButton.Foreground = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Black);
         }
         private void PagamentoCredito(object s, RoutedEventArgs e)
         {
             pagamento = "Credito";
             PagamentoDinheiroButton.Background = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Transparent);
+            PagamentoDinheiroButton.Foreground = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Black);
+
             PagamentoCartaoDebitoButton.Background = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Transparent);
+            PagamentoCartaoDebitoButton.Foreground = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Black);
+
             PagamentoCartaoCreditoButton.Background = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Blue);
+            PagamentoCartaoCreditoButton.Foreground = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.White);
+
             PagamentoPixButton.Background = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Transparent);
+            PagamentoPixButton.Foreground = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Black);
         }
         private void PagamentoPix(object s, RoutedEventArgs e)
         {
             pagamento = "Pix";
             PagamentoDinheiroButton.Background = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Transparent);
+            PagamentoDinheiroButton.Foreground = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Black);
+
             PagamentoCartaoDebitoButton.Background = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Transparent);
+            PagamentoCartaoDebitoButton.Foreground = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Black);
+
             PagamentoCartaoCreditoButton.Background = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Transparent);
+            PagamentoCartaoCreditoButton.Foreground = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Black);
+
             PagamentoPixButton.Background = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Blue);
+            PagamentoPixButton.Foreground = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.White);
         }
+
 
         // Finaliza a venda e atualiza o estoque
         private void FinalizarVenda(object s, RoutedEventArgs e)
         {
             using (GerenciamentoContext context = new GerenciamentoContext())
             {
-                DateTime data = DateTime.Now;
                 string dataHoje = $"{data.Day}/{data.Month}/{data.Year} - {data.Hour}:{data.Minute}";
 
-                var produto = context.Produtos.FirstOrDefault(p => p.Mercadoria == int.Parse(TextRegister.Text));
 
-                if (total == 0 | pagamento == null)
+                if (total == 0 || pagamento == null)
                 {
                     MessageBox.Show("Por favor, insira uma mercadoria ou forma de pagamento antes de finalizar a venda!");
                     return;
                 }
                 else
                 {
-                    produto.Estoque = produto.Estoque - int.Parse(TextQuantity.Text);
-                    context.Produtos.Update(produto);
+                    foreach(var item in Selecionados)
+                    {
+                        int mercadoria = item.Mercadoria;
+                        var produto = context.Produtos.FirstOrDefault(p => p.Mercadoria == mercadoria);
+                        produto.Estoque = produto.Estoque - item.Quantidade;
+                        context.Produtos.Update(produto);
+                        var newVenda = new VendasModel(dataHoje, item.Mercadoria, item.Produto, pagamento, item.Quantidade, item.Total);
 
-                    VendasModel newVenda = new VendasModel(dataHoje, produto.Mercadoria, produto.Nome, pagamento, int.Parse(TextQuantity.Text), total);
-                    context.Vendas.Add(newVenda);
+                        context.Vendas.Add(newVenda);
+                    }
+
                     context.SaveChanges();
                     LoadProducts();
                     MessageBox.Show($"Venda finalizada com sucesso! Total: R$ {total:F2}; Pagamento em: {pagamento}; Data: {data.Day}/{data.Month}/{data.Year} - {data.Hour}:{data.Minute}");
@@ -324,28 +376,76 @@ namespace ProjetoLojaAutoPeça
                     TextQuantity.Text = "";
 
                     PagamentoDinheiroButton.Background = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Transparent);
+                    PagamentoDinheiroButton.Foreground = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Black);
+
                     PagamentoCartaoDebitoButton.Background = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Transparent);
+                    PagamentoCartaoDebitoButton.Foreground = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Black);
+
                     PagamentoCartaoCreditoButton.Background = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Transparent);
+                    PagamentoCartaoCreditoButton.Foreground = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Black);
+
                     PagamentoPixButton.Background = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Transparent);
+                    PagamentoPixButton.Foreground = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Black);
 
                     TotalInput.Text = $"Total: R$00,00";
                     GridProdutos.Children.Clear();
                     GridProdutos.RowDefinitions.Clear();
+                    Selecionados.Clear();
 
                 }
             }
         }
 
+        // Gera planilha de excel com as vendas
         private void GerarRelatorioVendas(object s, RoutedEventArgs e)
         {
+          using (GerenciamentoContext context = new GerenciamentoContext())
+            {
+                var vendas = context.Vendas.ToList();
+               
+                var planilha = WorkBook.Create(ExcelFileFormat.XLSX);
+                var aba = planilha.DefaultWorkSheet;
 
+                aba["A1"].Value = "Data";
+                aba["B1"].Value = "Mercadoria";
+                aba["C1"].Value = "Produto";
+                aba["D1"].Value = "Forma de Pagamento";
+                aba["E1"].Value = "Quantidade";
+                aba["F1"].Value = "Total";
+
+                int row = 2;
+                foreach (var venda in vendas)
+                {
+                    aba[$"A{row}"].Value = venda.Data;
+                    aba[$"B{row}"].Value = venda.Mercadoria;
+                    aba[$"C{row}"].Value = venda.Produto;
+                    aba[$"D{row}"].Value = venda.FormaDePagamento;
+                    aba[$"E{row}"].Value = venda.Quantidade;
+                    aba[$"F{row}"].Value = venda.Total;
+                    row++;
+                }
+
+                var dialog = new SaveFileDialog
+                {
+                    Filter = "Excel Files (*.xlsx)|*.xlsx",
+                    FileName = "RelatorioVendas.xlsx"
+                };
+
+                if (dialog.ShowDialog() == true)
+                {
+                    planilha.SaveAs(dialog.FileName);
+                    MessageBox.Show("Relatório de vendas gerado com sucesso!");
+                }
+
+            }
         }
 
+        // Verifica se o produto está cadastrado corretamente
         private bool ValidaDados(ProdutosModel product)
         {
             if (product.Nome == null | product.Preco == 0 | product.Estoque == 0) return false;
             return true;
         }
-    
+   
     }   
 }
