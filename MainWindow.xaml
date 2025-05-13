@@ -65,13 +65,13 @@
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
                         <Label  Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" Content="Mercadoria"/>
-                        <TextBox  Grid.Row="0" Grid.Column="1" Text="{Binding Mercadoria}"/>
+                        <TextBox x:Name="mercadoriatxt" Grid.Row="0" Grid.Column="1" Text="{Binding Mercadoria}"/>
                         <Label  Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" Content="Nome"/>
-                        <TextBox  Grid.Row="1" Grid.Column="2" Text="{Binding Nome}"/>
+                        <TextBox  x:Name="nometxt" Grid.Row="1" Grid.Column="2" Text="{Binding Nome}"/>
                         <Label  Grid.Row="2" Grid.Column="0" HorizontalAlignment="Left" Content="Preço"/>
-                        <TextBox Grid.Row="2" Grid.Column="3" Text="{Binding Preco}" />
+                        <TextBox x:Name="precotxt" Grid.Row="2" Grid.Column="3" />
                         <Label Grid.Row="3" Grid.Column="0" HorizontalAlignment="Left" Content="Quantidade" />
-                        <TextBox Grid.Row="3" Grid.Column="4" Text="{Binding Estoque}"/>
+                        <TextBox x:Name="estoquetxt" Grid.Row="3" Grid.Column="4" Text="{Binding Estoque}"/>
                         <Button Grid.Row="4" Grid.ColumnSpan="2" Height="35" Background="Black" Foreground="White" Width="150" Content="Adicionar"
                                 Margin="5" FontSize="15" Click="AddItem" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     </Grid>
@@ -94,11 +94,11 @@
                             <ColumnDefinition Width="11*"/>
                         </Grid.ColumnDefinitions>
                         <Label Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" Content="Nome"/>
-                        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Nome}"/>
+                        <TextBox x:Name="nomeupdatetxt" Grid.Row="0" Grid.Column="1" Text="{Binding Nome}"/>
                         <Label Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" Content="Preço"/>
-                        <TextBox Grid.Row="1" Grid.Column="2" Text="{Binding Preco}"/>
+                        <TextBox x:Name="precoupdatetxt" Grid.Row="1" Grid.Column="2"/>
                         <Label Grid.Row="2" Grid.Column="0" HorizontalAlignment="Left" Content="Quantidade" Margin="-7,0,0,20" Grid.RowSpan="2" />
-                        <TextBox Grid.Row="2" Grid.Column="3" Text="{Binding Estoque}"/>
+                        <TextBox x:Name="quantidadeupdatetxt" Grid.Row="2" Grid.Column="3" Text="{Binding Estoque}"/>
                         <Button Grid.Row="3" Grid.ColumnSpan="2" Width="150" Height="35"
                                 Background="Black"
                                 Content="Salvar Alterações"

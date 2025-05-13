@@ -10,6 +10,19 @@ namespace ProjetoLojaAutoPeça.Model
     // Classe que representa o modelo de produtos
     public class ProdutosModel
     {
+        // Construtor padrão
+        public ProdutosModel()
+        { }
+
+        /// Construtor para inicializar os atributos do produto
+        public ProdutosModel(int mercadoria, string nome, double preco, int estoque)
+        {
+            Mercadoria = mercadoria;
+            Nome = nome;
+            Preco = preco;
+            Estoque = estoque;
+        }
+
         [Key]
         public int ProdutoId { get; set; }
         public int Mercadoria { get; set; }

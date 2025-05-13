@@ -60,6 +60,8 @@ namespace ProjetoLojaAutoPeça
         {
             CampNewProduct.Visibility = Visibility.Visible;
         }
+
+        // Abre a tela de cadastro de usuários
         public void OpenAddUser(object s, RoutedEventArgs e)
         {
             AddUser addUser = new AddUser();
@@ -71,15 +73,28 @@ namespace ProjetoLojaAutoPeça
         {
             if (ValidaDados(NewProduct))
             {
-                using (GerenciamentoContext context = new GerenciamentoContext())
+                if (mercadoriatxt.Text == "" || nometxt.Text == "" || precotxt.Text == "" || estoquetxt.Text == "")
                 {
-                    context.Produtos.Add(NewProduct);
-                    context.SaveChanges();
-                    LoadProducts();
-                    NewProduct = new ProdutosModel();
-                    NovoProdutoGrid.DataContext = NewProduct;
-                    MessageBox.Show("Produto adicionado com sucesso!");
-                    CampNewProduct.Visibility = Visibility.Hidden;
+                    MessageBox.Show("Por favor, preencha todos os campos!");
+                    return;
+                }
+                else
+                {
+                    int mercadoria = int.Parse(mercadoriatxt.Text);
+                    string nome = nometxt.Text;
+                    double preco = double.Parse(precotxt.Text);
+                    int estoque = int.Parse(estoquetxt.Text);
+
+                    using (GerenciamentoContext context = new GerenciamentoContext())
+                    {
+                        var newProduct = new ProdutosModel(mercadoria, nome, preco, estoque);
+                        context.Produtos.Add(newProduct);
+                        context.SaveChanges();
+                        LoadProducts();
+                        NovoProdutoGrid.DataContext = newProduct;
+                        MessageBox.Show("Produto adicionado com sucesso!");
+                        CampNewProduct.Visibility = Visibility.Hidden;
+                    }
                 }
             }
             else
@@ -127,21 +142,36 @@ namespace ProjetoLojaAutoPeça
             {
                 using (GerenciamentoContext context = new GerenciamentoContext())
                 {
-                    bool searchProduct = context.Produtos.Any(p => p.Equals(selectProduct));
-                    if (searchProduct == false)
+                    var produto = context.Produtos.FirstOrDefault(p => p.Equals(selectProduct));
+                    if (produto == null)
                     {
                         MessageBox.Show("Produto não encontrado! Por favor, verifique se o produto ainda existe na lista!");
                         return;
                     }
                     else
                     {
-                        context.Update(selectProduct);
-                        var ProductUpdate = (s as FrameworkElement).DataContext as ProdutosModel;
-                        context.Produtos.Update(ProductUpdate);
-                        context.SaveChanges();
-                        LoadProducts();
-                        MessageBox.Show("Produto atualizado com sucesso!");
-                        CampUpdateProduct.Visibility = Visibility.Hidden;
+                        if(nomeupdatetxt.Text == "" || precoupdatetxt.Text == "" || quantidadeupdatetxt.Text == "")
+                        {
+                            MessageBox.Show("Por favor, preencha todos os campos!");
+                            return;
+                        }
+                        else
+                        {
+
+                            string nome = nomeupdatetxt.Text;
+                            double preco = double.Parse(precoupdatetxt.Text);
+                            int quantidade = int.Parse(quantidadeupdatetxt.Text);
+
+                            produto.Nome = nome;
+                            produto.Preco = preco;
+                            produto.Estoque = quantidade;
+
+                            context.Produtos.Update(produto);
+                            context.SaveChanges();
+                            LoadProducts();
+                            MessageBox.Show("Produto atualizado com sucesso!");
+                            CampUpdateProduct.Visibility = Visibility.Hidden;
+                        }
                     }
                 }
             }
