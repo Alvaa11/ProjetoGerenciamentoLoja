@@ -2,6 +2,7 @@
 using System.IO.Packaging;
 using System.Windows;
 using System.Windows.Controls;
+using Google.Protobuf;
 using IronXL;
 using Microsoft.Win32;
 using ProjetoLojaAutoPeça.Context;
@@ -441,11 +442,10 @@ namespace ProjetoLojaAutoPeça
         }
 
         // Gera planilha de excel com as vendas
-        private void GerarRelatorioVendas(object s, RoutedEventArgs e)
+        private void GerarRelatorioVendas(List<VendasModel> vendas)
         {
           using (GerenciamentoContext context = new GerenciamentoContext())
             {
-                var vendas = context.Vendas.ToList();
                
                 var planilha = WorkBook.Create(ExcelFileFormat.XLSX);
                 var aba = planilha.DefaultWorkSheet;
@@ -490,6 +490,44 @@ namespace ProjetoLojaAutoPeça
             if (product == null || product.Nome == null || product.Preco == 0 || product.Estoque == 0) return false;
             return true;
         }
-   
+
+        private void DataRelatorio(object s, RoutedEventArgs e)
+        {
+            if(ComeçoPicker.Text == "" || FinalPicker.Text == "")
+            {
+                MessageBox.Show("Por favor, selecione um intervalo de datas válido!");
+            }
+
+            string dataInicio = ComeçoPicker.SelectedDate.Value.ToString("dd/MM/yyyy");
+            string dataFinal = FinalPicker.SelectedDate.Value.ToString("dd/MM/yyyy");
+
+            if (DateTime.Parse(dataInicio) > DateTime.Parse(dataFinal)) 
+            {
+                MessageBox.Show("A data de início não pode ser maior que a data final!");
+                return;
+            }
+            else if (DateTime.Parse(dataInicio) > DateTime.Now || DateTime.Parse(dataFinal) > DateTime.Now)
+            {
+                MessageBox.Show("As datas não podem ser maiores que a data de hoje!");
+                return;
+            }
+            
+            var vendas = BuscarPelaData(dataInicio, dataFinal);
+            GerarRelatorioVendas(vendas);
+        }
+
+        private List<VendasModel> BuscarPelaData(string datainicio, string dataFinal)
+        {
+            using (GerenciamentoContext context = new GerenciamentoContext())
+            {
+                var vendas = context.Vendas
+                    .AsEnumerable()
+                    .Where(v => DateTime.Parse(v.Data.Replace(" - ", " "))>= DateTime.Parse(datainicio.Replace(" - ", " "))&& DateTime.Parse(v.Data.Replace(" - ", " "))<= DateTime.Parse(dataFinal.Replace(" - ", " ")))
+                    .ToList();
+                
+
+                return vendas;
+            }
+        }
     }   
 }

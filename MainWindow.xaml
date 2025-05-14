@@ -214,21 +214,45 @@
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="77*"/>
+                                <RowDefinition Height="77*"/>
                                 <RowDefinition Height="116*"/>
                             </Grid.RowDefinitions>
-
-                            <TextBlock Grid.Row="0" Text="Utilitários" 
+                            
+                            <TextBlock Grid.Row="0" Text="Relatórios" 
                                        HorizontalAlignment="Center" 
                                        FontSize="25" 
                                        FontWeight="Bold" 
                                        FontFamily="Helvetica" 
-                                       FontStyle="Italic" Width="115"/>
-                            <Button Grid.Row="1" 
+                                       FontStyle="Italic" Width="125"/>
+
+                            <StackPanel Grid.Row="1" 
+                                        Width="260"
+                                        Orientation="Horizontal"
+                                        VerticalAlignment="Center">
+                                
+                                <Label Content="De:"
+                                       FontFamily="Helvetica"
+                                       FontSize="15"/>
+                                <DatePicker x:Name="ComeçoPicker" Width="95"
+                                         FontFamily="Helvetica"
+                                         FontSize="16"
+                                         VerticalAlignment="Center"/>
+                                
+                                <Label Content="Até:"
+                                       FontFamily="Helvetica"
+                                       FontSize="15"/>
+                                <DatePicker x:Name="FinalPicker"  Width="95"
+                                         FontFamily="Helvetica" 
+                                         FontSize="16"
+                                         VerticalAlignment="Center"/>
+                            </StackPanel>
+                            
+                            <Button Grid.Row="2" 
                                     Content="Relatório de vendas" 
                                     FontSize="25" FontFamily="Helvetica" 
                                     FontStyle="Italic" Foreground="Blue"
                                     Margin="5" Cursor="Hand"
-                                    Click="GerarRelatorioVendas"/>
+                                    Click="DataRelatorio"/>
                         </Grid>
                     </Border>
                 </StackPanel>
