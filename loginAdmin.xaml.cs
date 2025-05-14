@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using ProjetoLojaAutoPeça.Context;
 using ProjetoLojaAutoPeça.Model;
+using Cryptography;
 
 namespace ProjetoLojaAutoPeça
 {
@@ -17,13 +18,14 @@ namespace ProjetoLojaAutoPeça
         // Verifica se o usuário é um administrador e abre a tela de adicionar usuário
         private void Open(object s, RoutedEventArgs e)
         {
+
             using (GerenciamentoContext context = new GerenciamentoContext())
             {
-                UsuariosModel UserIsAdmin = new UsuariosModel(UserTxt.Text, PassTxt.Password);
+                var UserIsAdmin = context.Usuarios.FirstOrDefault(u => u.Usuario == UserTxt.Text);
+                bool verifyUser = VerificarUsuario(UserIsAdmin);
 
-                if (VerificarUsuario(UserIsAdmin) == false)
+                if (verifyUser == false)
                 {
-                    MessageBox.Show("Você não tem autorização para acessar essa área!");
                     return;
                 }
                 else
@@ -45,11 +47,35 @@ namespace ProjetoLojaAutoPeça
         // Verifica se o usuário existe no banco de dados
         private bool VerificarUsuario(UsuariosModel user)
         {
-            using (GerenciamentoContext context = new GerenciamentoContext())
+            if (user == null)
             {
-                bool userFound = context.Usuarios.Any(u => u.Usuario == UserTxt.Text &&
-                                                                u.Senha == PassTxt.Password);
-                return userFound;
+                MessageBox.Show("Usuário não encontrado!");
+                return false;
+            }
+            else
+            {
+
+                using (GerenciamentoContext context = new GerenciamentoContext())
+                {
+                    string password = user.Senha;
+                    string passwordToCheck = PassTxt.Password;
+                    bool isValid = PasswordManager.VerifyPassword(passwordToCheck, password);
+                    if (isValid == false)
+                    {
+                        MessageBox.Show("Senha incorreta!");
+                        return false;
+                    }
+                    else if (user.Administrador == "Não")
+                    {
+                        MessageBox.Show("Você não tem autorização para acessar essa área!");
+                        return false;
+                    }
+                    else
+                    {
+                        return true;
+                    }
+
+                }
             }
         }
 

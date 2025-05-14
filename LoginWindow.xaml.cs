@@ -12,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Cryptography;
 using ProjetoLojaAutoPeça.Context;
 using ProjetoLojaAutoPeça.Model;
 
@@ -33,9 +34,10 @@ namespace ProjetoLojaAutoPeça
         {
             using (GerenciamentoContext context = new GerenciamentoContext())
             {
-                bool userFound = context.Usuarios.Any(context => context.Usuario == UserTxt.Text &&
-                                                            context.Senha == PassTxt.Password);
-                if (userFound)
+                UsuariosModel userFound = context.Usuarios.FirstOrDefault(context => context.Usuario == UserTxt.Text);
+                bool userFoundCheck = VerificarUsuario(userFound);
+
+                if (userFoundCheck)
                 {
                     MainWindow mainWindow = new MainWindow();
                     mainWindow.Show();
@@ -43,7 +45,7 @@ namespace ProjetoLojaAutoPeça
                 }
                 else
                 {
-                    MessageBox.Show("Usuário ou senha inválidos.");
+                    return;
                 }
             }
         }
@@ -52,6 +54,40 @@ namespace ProjetoLojaAutoPeça
         public void OnClose(object s, RoutedEventArgs e)
         {
             this.Close();
+        }
+
+        // Metodo para verificar se o usuário existe no banco de dados
+        private bool VerificarUsuario(UsuariosModel user)
+        {
+            if (user == null)
+            {
+                MessageBox.Show("Usuário não encontrado!");
+                return false;
+            }
+            else
+            {
+                using (GerenciamentoContext context = new GerenciamentoContext())
+                {
+                    string password = user.Senha;
+                    string passwordToCheck = PassTxt.Password;
+                    bool isValid = PasswordManager.VerifyPassword(passwordToCheck, password);
+                    if (isValid == false)
+                    {
+                        MessageBox.Show("Senha incorreta!");
+                        return false;
+                    }
+                    else if (user.Administrador == "Não")
+                    {
+                        MessageBox.Show("Você não tem autorização para acessar essa área!");
+                        return false;
+                    }
+                    else
+                    {
+                        return true;
+                    }
+
+                }
+            }
         }
 
         /// Método chamado quando o botão esquerdo do mouse é segurado e arrastado

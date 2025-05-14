@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using ProjetoLojaAutoPeça.Context;
 using ProjetoLojaAutoPeça.Model;
+using Cryptography;
 
 namespace ProjetoLojaAutoPeça
 {
@@ -9,6 +10,7 @@ namespace ProjetoLojaAutoPeça
     /// </summary>
     public partial class AddUser : Window
     {
+        UsuariosModel UserDelete = new UsuariosModel();
         UsuariosModel NewUser = new UsuariosModel();
         public AddUser()
         {
@@ -30,6 +32,9 @@ namespace ProjetoLojaAutoPeça
         // Método para adicionar um novo usuário
         private void Register(object s, RoutedEventArgs e)
         {
+            string password = PassTxt.Password;
+            string hashedPassword = PasswordManager.HashPassword(password);
+
             using (GerenciamentoContext context = new GerenciamentoContext())
             {
                 if (VerificarUsuario(NewUser) == true)
@@ -39,7 +44,7 @@ namespace ProjetoLojaAutoPeça
                 else
                 {
                     string isChecked = AdminCheckBox.IsChecked == true ? "Sim" : "Não";
-                    UsuariosModel newUser = new UsuariosModel(UserTxt.Text, PassTxt.Password, isChecked);
+                    UsuariosModel newUser = new UsuariosModel(UserTxt.Text, hashedPassword, isChecked);
                     context.Usuarios.Add(newUser);
                     context.SaveChanges();
                     LoadUsers();
@@ -54,10 +59,20 @@ namespace ProjetoLojaAutoPeça
         {
             using (GerenciamentoContext context = new GerenciamentoContext())
             {
-                var UserDelete = (s as FrameworkElement).DataContext as UsuariosModel;
-                context.Usuarios.Remove(UserDelete);
-                context.SaveChanges();
-                LoadUsers();
+                UserDelete = (s as FrameworkElement).DataContext as UsuariosModel;
+                bool searchProduct = context.Usuarios.Any(p => p.Equals(UserDelete));
+                if (searchProduct == false)
+                {
+                    MessageBox.Show("Não é possível excluir um usuario inexistente!");
+                    return;
+                }
+                else
+                {
+                    var UserDelete = (s as FrameworkElement).DataContext as UsuariosModel;
+                    context.Usuarios.Remove(UserDelete);
+                    context.SaveChanges();
+                    LoadUsers();
+                }
             }
         }
 
