@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -48,13 +49,18 @@ namespace ProjetoLojaAutoPeça.Context
             });
         }
 
+        // Método para configurar o banco de dados
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
-            if (!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder.UseSqlite("Data Source=C:\\Users\\010454164\\Desktop\\Projetos\\ProjetoLojaAutoPeça\\LojaAutoPeças.db");
-            }
+
+            var basePath = AppContext.BaseDirectory;
+            var dbPath = Path.Combine(basePath, "LojaAutoPeças.db");
+
+            Console.WriteLine($"{dbPath}");
+
+            optionsBuilder.UseSqlite($"Data Source={dbPath}");
+            
         }
     }
     

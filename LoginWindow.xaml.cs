@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Cryptography;
+using Google.Protobuf;
 using ProjetoLojaAutoPeça.Context;
 using ProjetoLojaAutoPeça.Model;
 
@@ -32,6 +33,8 @@ namespace ProjetoLojaAutoPeça
         /// Verifica se o usuario e senha estão corretos, caso sim, abre a tela principal
         public void OnSubmit(object s, RoutedEventArgs e)
         {
+            var path = AppContext.BaseDirectory;
+            MessageBox.Show(path);
             using (GerenciamentoContext context = new GerenciamentoContext())
             {
                 UsuariosModel userFound = context.Usuarios.FirstOrDefault(context => context.Usuario == UserTxt.Text);
@@ -59,6 +62,7 @@ namespace ProjetoLojaAutoPeça
         // Metodo para verificar se o usuário existe no banco de dados
         private bool VerificarUsuario(UsuariosModel user)
         {
+
             if (user == null)
             {
                 MessageBox.Show("Usuário não encontrado!");

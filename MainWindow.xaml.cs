@@ -496,6 +496,7 @@ namespace ProjetoLojaAutoPeça
             if(ComeçoPicker.Text == "" || FinalPicker.Text == "")
             {
                 MessageBox.Show("Por favor, selecione um intervalo de datas válido!");
+                return;
             }
 
             string dataInicio = ComeçoPicker.SelectedDate.Value.ToString("dd/MM/yyyy");
