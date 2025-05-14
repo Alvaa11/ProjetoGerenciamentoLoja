@@ -2,8 +2,7 @@
 using System.IO.Packaging;
 using System.Windows;
 using System.Windows.Controls;
-using Google.Protobuf;
-using IronXL;
+using ClosedXML.Excel;
 using Microsoft.Win32;
 using ProjetoLojaAutoPeça.Context;
 using ProjetoLojaAutoPeça.Model;
@@ -444,28 +443,27 @@ namespace ProjetoLojaAutoPeça
         // Gera planilha de excel com as vendas
         private void GerarRelatorioVendas(List<VendasModel> vendas)
         {
-          using (GerenciamentoContext context = new GerenciamentoContext())
+            using (var workbook = new XLWorkbook())
             {
-               
-                var planilha = WorkBook.Create(ExcelFileFormat.XLSX);
-                var aba = planilha.DefaultWorkSheet;
+                var aba = workbook.Worksheets.Add("Relatório de Vendas");
 
-                aba["A1"].Value = "Data";
-                aba["B1"].Value = "Mercadoria";
-                aba["C1"].Value = "Produto";
-                aba["D1"].Value = "Forma de Pagamento";
-                aba["E1"].Value = "Quantidade";
-                aba["F1"].Value = "Total";
+                // Cabeçalhos
+                aba.Cell("A1").Value = "Data";
+                aba.Cell("B1").Value = "Mercadoria";
+                aba.Cell("C1").Value = "Produto";
+                aba.Cell("D1").Value = "Forma de Pagamento";
+                aba.Cell("E1").Value = "Quantidade";
+                aba.Cell("F1").Value = "Total";
 
                 int row = 2;
                 foreach (var venda in vendas)
                 {
-                    aba[$"A{row}"].Value = venda.Data;
-                    aba[$"B{row}"].Value = venda.Mercadoria;
-                    aba[$"C{row}"].Value = venda.Produto;
-                    aba[$"D{row}"].Value = venda.FormaDePagamento;
-                    aba[$"E{row}"].Value = venda.Quantidade;
-                    aba[$"F{row}"].Value = venda.Total;
+                    aba.Cell(row, 1).Value = venda.Data;
+                    aba.Cell(row, 2).Value = venda.Mercadoria;
+                    aba.Cell(row, 3).Value = venda.Produto;
+                    aba.Cell(row, 4).Value = venda.FormaDePagamento;
+                    aba.Cell(row, 5).Value = venda.Quantidade;
+                    aba.Cell(row, 6).Value = venda.Total;
                     row++;
                 }
 
@@ -477,12 +475,15 @@ namespace ProjetoLojaAutoPeça
 
                 if (dialog.ShowDialog() == true)
                 {
-                    planilha.SaveAs(dialog.FileName);
+                    workbook.SaveAs(dialog.FileName);
                     MessageBox.Show("Relatório de vendas gerado com sucesso!");
                 }
-
             }
         }
+
+
+    
+
 
         // Verifica se o produto está cadastrado corretamente
         private bool ValidaDados(ProdutosModel product)
@@ -493,28 +494,34 @@ namespace ProjetoLojaAutoPeça
 
         private void DataRelatorio(object s, RoutedEventArgs e)
         {
-            if(ComeçoPicker.Text == "" || FinalPicker.Text == "")
+            try
             {
-                MessageBox.Show("Por favor, selecione um intervalo de datas válido!");
-                return;
-            }
+                if (ComeçoPicker.Text == "" || FinalPicker.Text == "")
+                {
+                    MessageBox.Show("Por favor, selecione um intervalo de datas válido!");
+                    return;
+                }
 
-            string dataInicio = ComeçoPicker.SelectedDate.Value.ToString("dd/MM/yyyy");
-            string dataFinal = FinalPicker.SelectedDate.Value.ToString("dd/MM/yyyy");
+                string dataInicio = ComeçoPicker.SelectedDate.Value.ToString("dd/MM/yyyy");
+                string dataFinal = FinalPicker.SelectedDate.Value.ToString("dd/MM/yyyy");
 
-            if (DateTime.Parse(dataInicio) > DateTime.Parse(dataFinal)) 
+                if (DateTime.Parse(dataInicio) > DateTime.Parse(dataFinal))
+                {
+                    MessageBox.Show("A data de início não pode ser maior que a data final!");
+                    return;
+                }
+                else if (DateTime.Parse(dataInicio) > DateTime.Now || DateTime.Parse(dataFinal) > DateTime.Now)
+                {
+                    MessageBox.Show("As datas não podem ser maiores que a data de hoje!");
+                    return;
+                }
+
+                var vendas = BuscarPelaData(dataInicio, dataFinal);
+                GerarRelatorioVendas(vendas);
+            }catch(Exception ex)
             {
-                MessageBox.Show("A data de início não pode ser maior que a data final!");
-                return;
+                MessageBox.Show($"Erro ao gerar o relatorio: {ex.Message}");
             }
-            else if (DateTime.Parse(dataInicio) > DateTime.Now || DateTime.Parse(dataFinal) > DateTime.Now)
-            {
-                MessageBox.Show("As datas não podem ser maiores que a data de hoje!");
-                return;
-            }
-            
-            var vendas = BuscarPelaData(dataInicio, dataFinal);
-            GerarRelatorioVendas(vendas);
         }
 
         private List<VendasModel> BuscarPelaData(string datainicio, string dataFinal)

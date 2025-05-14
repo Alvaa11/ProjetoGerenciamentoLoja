@@ -57,8 +57,6 @@ namespace ProjetoLojaAutoPeça.Context
             var basePath = AppContext.BaseDirectory;
             var dbPath = Path.Combine(basePath, "LojaAutoPeças.db");
 
-            Console.WriteLine($"{dbPath}");
-
             optionsBuilder.UseSqlite($"Data Source={dbPath}");
             
         }
