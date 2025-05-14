@@ -71,47 +71,38 @@ namespace ProjetoLojaAutoPeça
         // Adiciona o produto no banco de dados
         public void AddItem(object s, RoutedEventArgs e)
         {
-            if (ValidaDados(NewProduct))
+            if (mercadoriatxt.Text == null || nometxt.Text == null || precotxt.Text == null || estoquetxt.Text == null)
             {
-                if (mercadoriatxt.Text == "" || nometxt.Text == "" || precotxt.Text == "" || estoquetxt.Text == "")
-                {
-                    MessageBox.Show("Por favor, preencha todos os campos!");
-                    return;
-                }
-                else
-                {
-                    int mercadoria;
-                    string nome = nometxt.Text;
-                    double preco;
-                    int estoque;
-
-                    bool converterMercadoria = int.TryParse(mercadoriatxt.Text, out mercadoria);
-                    bool converterPreco = double.TryParse(precotxt.Text, out preco);
-                    bool converterEstoque = int.TryParse(estoquetxt.Text, out estoque);
-
-                    if (!converterEstoque || !converterMercadoria || !converterPreco)
-                    {
-                        MessageBox.Show("Por favor, insira uma mercadoria válida!");
-                        return;
-                    };
-                    
-
-                    using (GerenciamentoContext context = new GerenciamentoContext())
-                    {
-                        var newProduct = new ProdutosModel(mercadoria, nome, preco, estoque);
-                        context.Produtos.Add(newProduct);
-                        context.SaveChanges();
-                        LoadProducts();
-                        NovoProdutoGrid.DataContext = newProduct;
-                        MessageBox.Show("Produto adicionado com sucesso!");
-                        CampNewProduct.Visibility = Visibility.Hidden;
-                    }
-                }
+                MessageBox.Show("Por favor, preencha todos os campos!");
+                return;
             }
             else
             {
-                MessageBox.Show("Preencha todos os campos corretamente.");
+                int mercadoria;
+                string nome = nometxt.Text;
+                double preco;
+                int estoque;
 
+                bool converterMercadoria = int.TryParse(mercadoriatxt.Text, out mercadoria);
+                bool converterPreco = double.TryParse(precotxt.Text, out preco);
+                bool converterEstoque = int.TryParse(estoquetxt.Text, out estoque);
+
+                if (!converterEstoque || !converterMercadoria || !converterPreco)
+                {
+                    MessageBox.Show("Por favor, insira uma mercadoria válida!");
+                    return;
+                };
+
+                using (GerenciamentoContext context = new GerenciamentoContext())
+                {
+                    var newProduct = new ProdutosModel(mercadoria, nome, preco, estoque);
+                    context.Produtos.Add(newProduct);
+                    context.SaveChanges();
+                    LoadProducts();
+                    NovoProdutoGrid.DataContext = newProduct;
+                    MessageBox.Show("Produto adicionado com sucesso!");
+                    CampNewProduct.Visibility = Visibility.Hidden;
+                }
             }
         }
 
@@ -200,6 +191,9 @@ namespace ProjetoLojaAutoPeça
                 var ProductUpdate = (s as FrameworkElement).DataContext as ProdutosModel;
 
             }
+            nomeupdatetxt.Text = "";
+            precoupdatetxt.Text = "";
+            quantidadeupdatetxt.Text = "";
         }
 
         // Fecha a tela de cadastro de produtos
@@ -493,7 +487,7 @@ namespace ProjetoLojaAutoPeça
         // Verifica se o produto está cadastrado corretamente
         private bool ValidaDados(ProdutosModel product)
         {
-            if (product.Nome == null | product.Preco == 0 | product.Estoque == 0) return false;
+            if (product == null || product.Nome == null || product.Preco == 0 || product.Estoque == 0) return false;
             return true;
         }
    
