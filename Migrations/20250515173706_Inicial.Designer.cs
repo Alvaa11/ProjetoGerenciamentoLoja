@@ -10,8 +10,8 @@ using ProjetoLojaAutoPeça.Context;
 namespace ProjetoLojaAutoPeça.Migrations
 {
     [DbContext(typeof(GerenciamentoContext))]
-    [Migration("20250512231717_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20250515173706_Inicial")]
+    partial class Inicial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

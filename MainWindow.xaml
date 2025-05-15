@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ProjetoLojaAutoPeça"
         mc:Ignorable="d"
-        Title="NOME DA LOJA" Height="805" Width="761"
+        Title="MG AUTO PEÇAS" Height="805" Width="761"
         ScrollViewer.VerticalScrollBarVisibility="Visible"
         Icon="carro-esporte.ico">
     <Canvas Background="#7FFFFFFF" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Hidden" Cursor="" Margin="0,0,0,1">
