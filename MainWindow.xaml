@@ -6,12 +6,13 @@
         xmlns:local="clr-namespace:ProjetoLojaAutoPeça"
         mc:Ignorable="d"
         Title="NOME DA LOJA" Height="805" Width="761"
-        ScrollViewer.VerticalScrollBarVisibility="Visible">
+        ScrollViewer.VerticalScrollBarVisibility="Visible"
+        Icon="carro-esporte.ico">
     <Canvas Background="#7FFFFFFF" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Hidden" Cursor="" Margin="0,0,0,1">
-        <Menu x:Name="Navigation" Height="104" Width="761" HorizontalAlignment="Right" VerticalAlignment="Top" Padding="10,20,10,0" Background="#C6034C3C">
-            <Button Content="Adicionar novo usuário" Height="45" Width="175" FontSize="15" Margin="0,10,0,0" Click="VerifyUser"/>
-            <Label Content="GERENCIAMENTO DE ESTOQUE" Height="78" Canvas.Left="208" Canvas.Top="12" Width="354" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="22" FontWeight="Bold" Foreground="White"/>
-        </Menu>
+        <StackPanel Orientation="Horizontal" x:Name="Navigation" Height="104" Width="761" HorizontalAlignment="Right" VerticalAlignment="Top" Background="#C6034C3C">
+            <Button Content="Adicionar novo usuário" Height="45" Width="175" FontSize="15" Margin="10,10,0,0" Click="VerifyUser" Cursor="Hand"/>
+            <Label Content="GERENCIAMENTO DE ESTOQUE" Height="78" Canvas.Left="208" Canvas.Top="12" Width="354" Margin="20,13,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="22" FontWeight="Bold" Foreground="White"/>
+        </StackPanel>
         <Button x:Name="CaixaButton" Content="Caixa" Width="120" Height="50" Canvas.Left="50" Canvas.Top="108" Background="black" FontSize="20" Cursor="Hand" Click="HiddenEstoque" HorizontalAlignment="Center" VerticalAlignment="Top"/>
         <Button x:Name="EstoqueButton" Content="Estoque" Width="120" Height="50" Canvas.Left="180" Canvas.Top="108" Background="black" FontSize="20" Cursor="Hand" Click="HiddenCaixa" HorizontalAlignment="Center" VerticalAlignment="Top"/>
         <Rectangle x:Name="GridWrapper" Height="586" Canvas.Left="42" Stroke="#FF7FC29B" Canvas.Top="166" Width="684" RadiusX="1" RadiusY="1" HorizontalAlignment="Center" VerticalAlignment="Top" />

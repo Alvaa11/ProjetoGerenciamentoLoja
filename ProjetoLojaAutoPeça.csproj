@@ -11,6 +11,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="carro-esporte.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="ClosedXML" Version="0.105.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.4" />
@@ -22,6 +26,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Cryptography\Cryptography.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="carro-esporte.ico" />
   </ItemGroup>
 
 </Project>

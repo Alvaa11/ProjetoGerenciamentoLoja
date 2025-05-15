@@ -1,7 +1,9 @@
 ﻿using System.Collections.ObjectModel;
+using System.IO;
 using System.IO.Packaging;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media.Imaging;
 using ClosedXML.Excel;
 using Microsoft.Win32;
 using ProjetoLojaAutoPeça.Context;

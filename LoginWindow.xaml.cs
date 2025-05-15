@@ -32,21 +32,28 @@ namespace ProjetoLojaAutoPeça
         /// Verifica se o usuario e senha estão corretos, caso sim, abre a tela principal
         public void OnSubmit(object s, RoutedEventArgs e)
         {
-            using (GerenciamentoContext context = new GerenciamentoContext())
+            try
             {
-                UsuariosModel userFound = context.Usuarios.FirstOrDefault(context => context.Usuario == UserTxt.Text);
-                bool userFoundCheck = VerificarUsuario(userFound);
 
-                if (userFoundCheck)
+                using (GerenciamentoContext context = new GerenciamentoContext())
                 {
-                    MainWindow mainWindow = new MainWindow();
-                    mainWindow.Show();
-                    this.Close();
+                    UsuariosModel userFound = context.Usuarios.FirstOrDefault(context => context.Usuario == UserTxt.Text);
+                    bool userFoundCheck = VerificarUsuario(userFound);
+
+                    if (userFoundCheck)
+                    {
+                        MainWindow mainWindow = new MainWindow();
+                        mainWindow.Show();
+                        this.Close();
+                    }
+                    else
+                    {
+                        return;
+                    }
                 }
-                else
-                {
-                    return;
-                }
+            } catch(Exception ex)
+            {
+                MessageBox.Show("Erro ao conectar ao banco de dados: " + ex.Message);
             }
         }
 
