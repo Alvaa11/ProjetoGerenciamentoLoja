@@ -291,17 +291,11 @@ namespace ProjetoLojaAutoPeça
                         FontFamily = new System.Windows.Media.FontFamily("Helvetica"),
                         FontStyle = FontStyles.Italic
                     };
+
                     Grid.SetRow(infoTextBLock, linhaAtualProdutos);
                     Grid.SetColumn(infoTextBLock, 1);
 
-                    GridProdutos.Children.Add(mercadoriaTextBlock);
-                    GridProdutos.Children.Add(infoTextBLock);
-                    
-                    linhaAtualMercadoria++;
-                    linhaAtualProdutos++;
-                    total = total + (produto.Preco * quantidade);
-                    TotalInput.Text = $"Total: R${total:F2}";
-                    
+
                     var venda = new VendasModel
                     {
                         Mercadoria = produto.Mercadoria,
@@ -310,12 +304,77 @@ namespace ProjetoLojaAutoPeça
                         Total = quantidade * produto.Preco
                     };
 
+                    var removeButton = new Button
+                    {
+                        Content = "X",
+                        Width = 30,
+                        Height = 30,
+                        Background = System.Windows.Media.Brushes.Red,
+                        Foreground = System.Windows.Media.Brushes.White,
+                        FontSize = 16,
+                        FontWeight = FontWeights.Bold,
+                        Tag = venda
+                    };
+                    Grid.SetRow(removeButton, linhaAtualProdutos);
+                    Grid.SetColumn(removeButton, 2);
+                    removeButton.Click += RemoverProduto;
+
+
+                    GridProdutos.Children.Add(mercadoriaTextBlock);
+                    GridProdutos.Children.Add(infoTextBLock);
+                    GridProdutos.Children.Add(removeButton);
+                    
+                    linhaAtualMercadoria++;
+                    linhaAtualProdutos++;
+                    total = total + (produto.Preco * quantidade);
+                    TotalInput.Text = $"Total: R${total:F2}";
+
                     Selecionados.Add(venda);
                     TextRegister.Text = "";
                     TextQuantity.Text = "";
 
                     return;
                 }
+            }
+        }
+
+        private void RemoverProduto(object s, RoutedEventArgs e)
+        {
+            var button = (Button)s;
+            var venda = (VendasModel)button.Tag;
+
+           if(venda != null)
+            {
+                Selecionados.Remove(venda);
+
+                total -= venda.Total;
+                TotalInput.Text = $"Total: R${total:F2}";
+
+                var elementosParaRemover = GridProdutos.Children
+                    .OfType<UIElement>()
+                    .Where(el => Grid.GetRow(el) == Grid.GetRow(button))
+                    .ToList();
+
+                foreach(var el in elementosParaRemover)
+                {
+                    GridProdutos.Children.Remove(el);
+                }
+
+                int linhas = GridProdutos.RowDefinitions.Count;
+                GridProdutos.RowDefinitions.RemoveAt(Grid.GetRow(button));
+                for (int i = Grid.GetRow(button) + 1; i < linhas; i++)
+                {
+                    foreach( UIElement child in GridProdutos.Children)
+                    {
+                        if (Grid.GetRow(child) == i)
+                        {
+                            Grid.SetRow(child, i - 1);
+                        }
+                    }
+                }
+
+                linhaAtualMercadoria--;
+                linhaAtualProdutos--;
             }
         }
 
